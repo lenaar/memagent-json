@@ -4,7 +4,7 @@ import shutil
 from unittest.mock import patch, MagicMock
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from utils.agent import Agent
+from agent import Agent
 from prompts.facts import init_assistant_facts
 
 def test_learn_fact():
@@ -148,7 +148,7 @@ def test_process_message_orchestration():
     mock_response = MagicMock()
     mock_response.choices[0].message.content = "Test response"
     
-    with patch('utils.agent.OpenAI') as mock_openai:
+    with patch('agent.OpenAI') as mock_openai:
         mock_client = MagicMock()
         mock_client.chat.completions.create.return_value = mock_response
         mock_openai.return_value = mock_client
@@ -178,7 +178,7 @@ def test_process_message_no_interaction_on_api_failure():
     # Initialize agent with test memory location
     agent = Agent(memory_location=test_dir)
 
-    with patch('utils.agent.OpenAI') as mock_openai:
+    with patch('agent.OpenAI') as mock_openai:
         mock_client = MagicMock()
         mock_client.chat.completions.create.side_effect = Exception("API Error")
         mock_openai.return_value = mock_client
