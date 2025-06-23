@@ -6,7 +6,7 @@
 # 2. Run tests/test_consistency.py to verify consistency
 # 3. Update any examples that reference these commands
 
-FACT_KEY_COMMAND = [
+FACT_KEY_COMMANDS = [
     "remember that", 
     "remember this", 
     "remember this fact", 
@@ -15,9 +15,9 @@ FACT_KEY_COMMAND = [
     "remember this detail"
 ]
 
-PROCEDURE_KEY_COMMAND = [
-    "remember the procedure",
+PROCEDURE_KEY_COMMANDS = [
     "remember the steps for", 
+    "remember the procedure",
     "remember the steps"
 ]
 

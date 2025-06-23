@@ -18,6 +18,8 @@ def get_procedure_content(procedure: Dict[str, Any]) -> str:
 def get_interaction_content(interaction: Dict[str, Any], separator: str = "") -> str:
     return f"user: {interaction['user_message']} {separator}agent: {interaction['agent_message']}"
 
+DEFAULT_MEMORY_LOCATION = "./json_memory"
+
 class Memory:
     # facts: list of facts, knowledge about the world, semantic memory
     # procedures: dict of procedures, smth can be done on autopilot, procedural memory
@@ -25,7 +27,7 @@ class Memory:
     # short_term_memory: fast access to latest information, working memory
     
     
-    def __init__(self, location: str = "./json_memory"):
+    def __init__(self, location: str = DEFAULT_MEMORY_LOCATION):
         self.location = location
         create_folder(location)
 

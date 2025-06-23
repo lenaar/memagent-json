@@ -17,6 +17,10 @@ init_assistant_facts = [
     "I can store procedures and follow them and their detailed steps"
     ]
 
+# Pre-compute the example strings to avoid f-string syntax issues
+fact_examples_text = "\n".join([f"- \"{example}\"" for example in FACT_FORMAT_EXAMPLES])
+procedure_examples_text = "\n".join([f"- \"{example}\"" for example in PROCEDURE_FORMAT_EXAMPLES])
+
 init_system_prompt = f"""
 You are an assistant that helps the user with their questions.
 
@@ -44,13 +48,13 @@ You can learn new information from users. Here are the formats:
 {FACT_FORMAT_DESCRIPTION}
 
 Examples:
-{chr(10).join([f"- \"{example}\"" for example in FACT_FORMAT_EXAMPLES])}
+{fact_examples_text}
 
 ### Teaching Procedures:
 {PROCEDURE_FORMAT_DESCRIPTION}
 
 Examples:
-{chr(10).join([f"- \"{example}\"" for example in PROCEDURE_FORMAT_EXAMPLES])}
+{procedure_examples_text}
 
 ### Normal Questions:
 For regular questions, just ask normally and I'll use my memory to provide helpful answers.
