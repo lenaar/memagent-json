@@ -24,8 +24,11 @@ class Agent:
     def learn_fact(self, message: str, key_command: str) -> None:
         try:
             fact = message.replace(key_command, "").strip()
-            self.memory.add_fact(fact, "fact")
-            print(f"Learned fact: {fact}")
+            if fact: 
+                self.memory.add_fact(fact, "fact")
+                print(f"Learned fact: {fact}")
+            else:
+                print(f"No fact found in message: {message}.")
         except Exception as e:
             print(f"Error learning fact: {e}. Format should be: {FACT_KEY_COMMANDS[0]} <fact>")
     
@@ -34,8 +37,12 @@ class Agent:
             start, steps = message.split(":", 1)
             procedure_name = start.replace(key_command, "").strip()
             steps = [f"{i+1}. {step.strip()}" for i, step in enumerate(steps.split(","))]
-            self.memory.add_procedure(procedure_name, steps, "procedure")
-            print(f"Learned procedure: {procedure_name} with steps: {steps}")
+            if len(steps) > 0: 
+                self.memory.add_procedure(procedure_name, steps, "procedure")
+                print(f"Learned procedure: {procedure_name} with steps: {steps}")
+            else:
+                print(f"No steps found in message: {message}.")
         except Exception as e:
             print(f"Error learning procedure: {e}. Format should be: {PROCEDURE_KEY_COMMANDS[0]} <procedure_name>: <step1>, <step2>, <step3>, ...")
+    
     
