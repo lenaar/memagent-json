@@ -1,0 +1,12 @@
+{
+  "Cooking": {
+    "description": "Cooking a meal",
+    "name": "Cooking",
+    "steps": [
+      "1. Get ingredients",
+      "2. Cook",
+      "3. Serve"
+    ],
+    "timestamp": "2025-06-18T17:59:13.273291"
+  }
+}

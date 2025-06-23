@@ -1,0 +1,26 @@
+[
+  {
+    "agent_message": "I'm good, thank you!",
+    "user_message": "Hello, how are you?",
+    "metadata": {
+      "weather": "sunny"
+    },
+    "timestamp": "2025-06-18T17:53:05.784828"
+  },
+  {
+    "agent_message": "I'm good, thank you!",
+    "user_message": "Hello, how are you?",
+    "metadata": {
+      "weather": "sunny"
+    },
+    "timestamp": "2025-06-18T17:53:30.811048"
+  },
+  {
+    "agent_message": "I'm good, thank you!",
+    "user_message": "Hello, how are you?",
+    "metadata": {
+      "weather": "sunny"
+    },
+    "timestamp": "2025-06-18T17:59:13.273432"
+  }
+]

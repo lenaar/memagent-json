@@ -354,4 +354,4 @@ if __name__ == "__main__":
     test_recent_interactions()
     test_short_term_memory_persistence()
     test_case_insensitive_search()
-    # test_get_context() 
+    test_get_context() 
