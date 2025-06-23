@@ -15,8 +15,8 @@ def get_fact_content(fact: Dict[str, Any]) -> str:
 def get_procedure_content(procedure: Dict[str, Any]) -> str:
     return f"{procedure.get('name', '')} {procedure.get('description', '')}"
 
-def get_interaction_content(interaction: Dict[str, Any]) -> str:
-    return f"user: {interaction['user_message']} agent: {interaction['agent_message']}"
+def get_interaction_content(interaction: Dict[str, Any], separator: str = "") -> str:
+    return f"user: {interaction['user_message']} {separator}agent: {interaction['agent_message']}"
 
 class Memory:
     # facts: list of facts, knowledge about the world, semantic memory
@@ -84,3 +84,29 @@ class Memory:
     def search_interactions(self, query: str, limit: int = 3) -> List[Dict[str, Any]]:
         return search_keywords(query, self.interactions, fn=get_interaction_content, limit=limit)
     
+    def search_recent_interactions(self, limit: int = 3) -> List[Dict[str, Any]]:
+        return self.interactions[-limit:]
+    
+    def sort_short_term_memory(self) -> None:
+        return sorted(self.short_term_memory, key=lambda x: (x["importance"], x["timestamp"]), reverse=True)
+        
+    # Generate a context string for the LLM using relevant memory.
+    def get_context(self, query: str, limit: int = 3) -> str:
+        recent_interactions = self.search_recent_interactions(limit=limit)
+        recent_interactions_context = "\n".join([get_interaction_content(interaction, separator="\n") for interaction in recent_interactions])
+        facts = self.search_facts(query, limit=limit)
+        facts_context = "\n".join([f"Fact: {fact['fact']}" for fact in facts])
+        procedures = self.search_procedures(query, limit=limit)
+        procedures_context = "\n".join([f"Procedure {i+1}. {procedure['name']}: {procedure['description']} {chr(10)}Procedure's Steps: {chr(10).join(procedure['steps'])}" for i, procedure in enumerate(procedures)])
+
+        print(f"Recent interactions: {recent_interactions_context}")
+        print(f"Facts: {facts_context}")
+        print(f"Proceduresss: {procedures}")
+        print(f"Procedures: {procedures_context}")
+        
+        short_term_memory = self.sort_short_term_memory()
+        short_term_memory_context = "\n".join([f"Short term memory: {memory['content']}" for memory in short_term_memory])
+
+        return f"Recent interactions: {recent_interactions_context}\nFacts: {facts_context}\nProcedures: {procedures_context}\nRecent memory with current context sorted by importance and timestamp: {short_term_memory_context}".strip()
+
+
