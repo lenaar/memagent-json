@@ -52,6 +52,9 @@ def test_learn_procedure():
     assert expected_procedure_name in agent.memory.procedures
     assert agent.memory.procedures[expected_procedure_name]["name"] == expected_procedure_name
     assert len(agent.memory.procedures[expected_procedure_name]["steps"]) == 3
+    assert agent.memory.procedures[expected_procedure_name]["steps"][0] == "1. boil water"
+    assert agent.memory.procedures[expected_procedure_name]["steps"][1] == "2. add coffee"
+    assert agent.memory.procedures[expected_procedure_name]["steps"][2] == "3. stir"
     
     # Clean up
     shutil.rmtree(test_dir)
