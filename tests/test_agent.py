@@ -1,6 +1,7 @@
 import sys
 import os
 import shutil
+from unittest.mock import patch, MagicMock
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from utils.agent import Agent
@@ -14,7 +15,7 @@ def test_learn_fact():
     os.makedirs(test_dir)
 
     # Initialize agent with test memory location
-    agent = Agent(api_key="test_key", memory_location=test_dir)
+    agent = Agent(memory_location=test_dir)
 
     # Test learning a fact
     test_message = "remember that Python is a programming language"
@@ -38,7 +39,7 @@ def test_learn_fact_error():
     os.makedirs(test_dir)
 
     # Initialize agent with test memory location
-    agent = Agent(api_key="test_key", memory_location=test_dir)
+    agent = Agent(memory_location=test_dir)
 
     # Test learning a fact with invalid format (empty fact)
     test_message = "remember that"
@@ -61,7 +62,7 @@ def test_learn_procedure():
     os.makedirs(test_dir)
 
     # Initialize agent with test memory location
-    agent = Agent(api_key="test_key", memory_location=test_dir)
+    agent = Agent(memory_location=test_dir)
 
     # Test learning a procedure
     test_message = "remember the steps for making coffee: boil water, add coffee, stir"
@@ -93,7 +94,7 @@ def test_learn_procedure_error():
     os.makedirs(test_dir)
 
     # Initialize agent with test memory location
-    agent = Agent(api_key="test_key", memory_location=test_dir)
+    agent = Agent(memory_location=test_dir)
 
     # Test learning a procedure with invalid format (no colon)
     test_message = "remember the steps for making coffee"
@@ -116,7 +117,7 @@ def test_extract_and_learn_output():
     os.makedirs(test_dir)
 
     # Initialize agent with test memory location
-    agent = Agent(api_key="test_key", memory_location=test_dir)
+    agent = Agent(memory_location=test_dir)
 
     # Test fact command
     result = agent.extract_and_learn("remember that Python is great")
@@ -133,9 +134,73 @@ def test_extract_and_learn_output():
     # Clean up
     shutil.rmtree(test_dir)
 
+def test_process_message_orchestration():
+    # Create a test directory
+    test_dir = "test_process_message_orchestration"
+    if os.path.exists(test_dir):
+        shutil.rmtree(test_dir)
+    os.makedirs(test_dir)
+
+    # Initialize agent with test memory location
+    agent = Agent(memory_location=test_dir)
+
+    # Mock OpenAI API response
+    mock_response = MagicMock()
+    mock_response.choices[0].message.content = "Test response"
+    
+    with patch('utils.agent.OpenAI') as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+        
+        # Test the orchestration - verify all steps are called in correct order
+        test_message = "What's the weather?"
+        response = agent.process_message(test_message)
+        
+        # Verify the response is returned
+        assert response == "Test response"
+        
+        # Verify interaction was stored (this is the key orchestration behavior)
+        assert len(agent.memory.interactions) == 1
+        assert agent.memory.interactions[0]["user_message"] == test_message
+        assert agent.memory.interactions[0]["agent_message"] == response
+    
+    # Clean up
+    shutil.rmtree(test_dir)
+
+def test_process_message_no_interaction_on_api_failure():
+    # Create a test directory
+    test_dir = "test_process_message_api_failure"
+    if os.path.exists(test_dir):
+        shutil.rmtree(test_dir)
+    os.makedirs(test_dir)
+
+    # Initialize agent with test memory location
+    agent = Agent(memory_location=test_dir)
+
+    with patch('utils.agent.OpenAI') as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.side_effect = Exception("API Error")
+        mock_openai.return_value = mock_client
+        
+        # Test that no interaction is stored when API fails
+        test_message = "What's the weather?"
+        response = agent.process_message(test_message)
+        
+        # Verify the response is None when API fails
+        assert response is None
+        
+        # Verify no interaction was stored (key orchestration behavior)
+        assert len(agent.memory.interactions) == 0
+    
+    # Clean up
+    shutil.rmtree(test_dir)
+
 if __name__ == "__main__":
     test_learn_fact()
     test_learn_fact_error()
     test_learn_procedure()
     test_learn_procedure_error()
     test_extract_and_learn_output()
+    test_process_message_orchestration()
+    test_process_message_no_interaction_on_api_failure()
