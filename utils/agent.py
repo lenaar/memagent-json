@@ -45,4 +45,17 @@ class Agent:
         except Exception as e:
             print(f"Error learning procedure: {e}. Format should be: {PROCEDURE_KEY_COMMANDS[0]} <procedure_name>: <step1>, <step2>, <step3>, ...")
     
-    
+    def extract_and_learn(self, message: str) -> None:
+        learn_fact_key_command = self.get_key_command(message, FACT_KEY_COMMANDS)
+        learn_procedure_key_command = self.get_key_command(message, PROCEDURE_KEY_COMMANDS)
+
+        if learn_fact_key_command:
+            self.learn_fact(message, learn_fact_key_command)
+            return "learned fact"
+        elif learn_procedure_key_command:
+            self.learn_procedure(message, learn_procedure_key_command)
+            return "learned procedure"
+        else:
+            print(f"No key command found in message: {message}. Proceed to create a context for the user's question.")
+            return "no key command found"
+

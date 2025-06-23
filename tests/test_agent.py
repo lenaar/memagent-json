@@ -108,8 +108,34 @@ def test_learn_procedure_error():
     # Clean up
     shutil.rmtree(test_dir)
 
+def test_extract_and_learn_output():
+    # Create a test directory
+    test_dir = "test_extract_and_learn_output"
+    if os.path.exists(test_dir):
+        shutil.rmtree(test_dir)
+    os.makedirs(test_dir)
+
+    # Initialize agent with test memory location
+    agent = Agent(api_key="test_key", memory_location=test_dir)
+
+    # Test fact command
+    result = agent.extract_and_learn("remember that Python is great")
+    assert result == "learned fact"
+    
+    # Test procedure command
+    result = agent.extract_and_learn("remember the steps for coffee: boil, add")
+    assert result == "learned procedure"
+    
+    # Test no command
+    result = agent.extract_and_learn("What is the weather?")
+    assert result == "no key command found"
+    
+    # Clean up
+    shutil.rmtree(test_dir)
+
 if __name__ == "__main__":
     test_learn_fact()
     test_learn_fact_error()
     test_learn_procedure()
     test_learn_procedure_error()
+    test_extract_and_learn_output()
