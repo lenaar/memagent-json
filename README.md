@@ -29,8 +29,8 @@ A minimal AI assistant with persistent JSON-based memory management. This projec
 memagent-json/
 ├── agent.py              # Main agent logic and OpenAI integration
 ├── memory.py             # Core memory management system
-├── main.py               # Entry point and examples
-├── chat_app.py           # Streamlit web chat interface
+├── main.py               # Console chat interface
+├── simple_chat.py        # Streamlit web chat interface
 ├── config/               # Configuration and command definitions
 │   └── commands.py      # Single source of truth for command formats
 ├── json_memory/          # Persistent JSON storage
@@ -76,20 +76,85 @@ memagent-json/
    OPENAI_API_KEY=your_openai_api_key_here
    ```
 
-## 📖 Usage
+## 🚀 Quick Start
 
-### Basic Usage
+### Run the Web Application (Streamlit)
 
-```python
-from agent import Agent
-
-# Initialize the agent
-agent = Agent()
-
-# Process a message (learns and responds)
-response = agent.process_message("Hello, how are you?")
-print(response)
+```bash
+streamlit run simple_chat.py
 ```
+
+### Run the Console Application
+
+```bash
+python main.py
+```
+
+## 🚀 Getting Started
+
+### Option 1: Web Interface (Streamlit)
+
+Start the interactive web chat interface:
+
+```bash
+streamlit run simple_chat.py
+```
+
+This will open a web browser with a clean chat interface where you can:
+
+- **Chat naturally** with your AI agent
+- **View memory statistics** in real-time (facts, procedures, interactions)
+- **See learning examples** right in the interface
+- **Watch the agent learn** as you teach it new things
+- **No commands to remember** - just type naturally!
+
+**Features:**
+
+- 🧠 Real-time memory visualization
+- 💬 Chat bubble interface
+- 📊 Memory statistics dashboard
+- 🎯 Learning command examples
+- 🔄 Persistent memory across sessions
+
+### Option 2: Console Interface
+
+For a simple command-line chat experience:
+
+```bash
+python main.py
+```
+
+This provides a clean console interface where you can:
+
+- **Chat directly** in your terminal
+- **Teach facts and procedures** through natural conversation
+- **Exit easily** by typing 'exit', 'quit', or 'bye'
+- **No complex commands** - just start chatting!
+
+**Example console session:**
+
+```
+🧠 MemAgent Simple Chat
+========================================
+Chat with an AI that remembers everything!
+Type 'exit' to quit.
+----------------------------------------
+🚀 Initializing agent...
+✅ Agent ready! Start chatting below.
+
+👤 You: Remember that my favorite color is blue
+🤔 Thinking...
+🤖 Assistant: I'll remember that your favorite color is blue!
+
+👤 You: What's my favorite color?
+🤔 Thinking...
+🤖 Assistant: Your favorite color is blue!
+
+👤 You: exit
+👋 Goodbye! Your agent will remember everything you taught it.
+```
+
+## 📖 Usage
 
 ### Learning Facts
 
