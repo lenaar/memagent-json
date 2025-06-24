@@ -49,6 +49,67 @@ memagent-json/
     └── test_memory.py   # Memory system tests
 ```
 
+## 🧠 Memory System Flow
+
+```mermaid
+graph TD
+    A[User Input] --> B{Input Type Detection}
+
+    B -->|Fact Command| C[Facts Memory]
+    B -->|Procedure Command| D[Procedures Memory]
+    B -->|Regular Chat| E[Interactions Memory]
+    B -->|Context Info| F[Short-term Memory]
+
+    C --> G[Store Fact]
+    D --> H[Store Procedure]
+    E --> I[Store Interaction]
+    F --> J[Store Context]
+
+    G --> K[Update facts.json]
+    H --> L[Update procedures.json]
+    I --> M[Update interactions.json]
+    J --> N[Update short_term_memory.json]
+
+    K --> O[Memory Retrieval]
+    L --> O
+    M --> O
+    N --> O
+
+    O --> P[Search & Context Building]
+    P --> Q[LLM Processing]
+    Q --> R[Generate Response]
+    R --> S[Update Short-term Memory]
+    S --> T[Return Response to User]
+
+    subgraph "Memory Types"
+        C
+        D
+        E
+        F
+    end
+
+    subgraph "Storage"
+        K
+        L
+        M
+        N
+    end
+
+    subgraph "Processing"
+        O
+        P
+        Q
+        R
+    end
+
+    style A fill:#e1f5fe
+    style T fill:#e8f5e8
+    style C fill:#fff3e0
+    style D fill:#f3e5f5
+    style E fill:#e0f2f1
+    style F fill:#fff8e1
+```
+
 ## 🛠️ Installation
 
 1. **Clone the repository**
