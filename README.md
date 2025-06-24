@@ -110,6 +110,72 @@ graph TD
     style F fill:#fff8e1
 ```
 
+### Process Message Flow
+
+```mermaid
+graph TD
+    A[User Input] --> B[Agent.process_message]
+    B --> C[extract_and_learn]
+
+    C --> D{Check for Learning Commands}
+    D -->|Fact Command Found| E[learn_fact]
+    D -->|Procedure Command Found| F[learn_procedure]
+    D -->|No Learning Command| G[build_messages]
+
+    E --> H[memory.add_fact]
+    F --> I[memory.add_procedure]
+
+    H --> J[Save to facts.json]
+    I --> K[Save to procedures.json]
+
+    G --> L[memory.get_context]
+    L --> M[Search Recent Interactions]
+    L --> N[Search Relevant Facts]
+    L --> O[Search Relevant Procedures]
+    L --> P[Get Short-term Memory]
+
+    M --> Q[Build Context String]
+    N --> Q
+    O --> Q
+    P --> Q
+
+    Q --> R[Create OpenAI Messages]
+    R --> S[Call OpenAI API]
+    S --> T[Get Response]
+    T --> U[memory.add_interaction]
+    U --> V[Save to interactions.json]
+    V --> W[Return Response to User]
+
+    subgraph "Learning Flow"
+        E
+        F
+        H
+        I
+    end
+
+    subgraph "Context Building"
+        L
+        M
+        N
+        O
+        P
+        Q
+    end
+
+    subgraph "Response Generation"
+        R
+        S
+        T
+        U
+    end
+
+    style A fill:#e1f5fe
+    style W fill:#e8f5e8
+    style E fill:#fff3e0
+    style F fill:#f3e5f5
+    style U fill:#e0f2f1
+```
+
 ## 🛠️ Installation
 
 1. **Clone the repository**
